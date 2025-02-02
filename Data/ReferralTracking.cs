@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Data.Entities;
 
 namespace Data
 {
@@ -20,6 +21,6 @@ namespace Data
 
         public DateTime ClickedAt { get; set; } = DateTime.UtcNow;
 
-        public Referral Referral { get; set; }
+        public Referrals Referral { get; set; }
     }
 }

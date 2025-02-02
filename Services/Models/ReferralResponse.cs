@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Services.Models
 {
-    public class ReferralRequestDto
+    public class ReferralResponse
     {
-        public string ReferrerUserId { get; set; }
+        public string ReferralCode { get; set; }
+
+        public string DeepLink { get; set; }
     }
 }

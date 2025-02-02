@@ -1,5 +1,9 @@
+using AutoMapper;
 using Data;
 using Microsoft.EntityFrameworkCore;
+using Services.DeepLink;
+using Services.Mapping;
+using Services.Referral;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +14,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var mappingConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+
+var mapper = mappingConfig.CreateMapper();
+
+builder.Services.AddSingleton(mapper);
+
 builder.Services.AddDbContext<ReferralDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddScoped<IReferralRepository, ReferralRepository>();
+builder.Services.AddScoped<IDeepLinkService, DeepLinkService>();
 
 var app = builder.Build();
 

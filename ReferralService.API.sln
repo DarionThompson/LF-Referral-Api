@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferralService.API", "ReferralService.API\ReferralService.API.csproj", "{AE527B13-B28F-4B69-9DA1-D1F67495722F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferralService.API", "ReferralService.API\ReferralService.API.csproj", "{AE527B13-B28F-4B69-9DA1-D1F67495722F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{17747354-88D9-48FA-A212-D2FA11BBB928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{17747354-88D9-48FA-A212-D2FA11BBB928}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{2680C54B-7772-4E8F-90A0-8E757D899AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{2680C54B-7772-4E8F-90A0-8E757D899AF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferralService.API.Tests", "ReferralService.API.Tests\ReferralService.API.Tests.csproj", "{0F5113A7-A8D5-4D2D-A1A5-956120FD963A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{2680C54B-7772-4E8F-90A0-8E757D899AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2680C54B-7772-4E8F-90A0-8E757D899AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2680C54B-7772-4E8F-90A0-8E757D899AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F5113A7-A8D5-4D2D-A1A5-956120FD963A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F5113A7-A8D5-4D2D-A1A5-956120FD963A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F5113A7-A8D5-4D2D-A1A5-956120FD963A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F5113A7-A8D5-4D2D-A1A5-956120FD963A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

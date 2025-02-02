@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ReferralDbContext))]
-    [Migration("20250202144722_InitialCreate")]
+    [Migration("20250202212619_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");
 
-            modelBuilder.Entity("Data.Referral", b =>
+            modelBuilder.Entity("Data.Entities.Referrals", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,11 +33,14 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ReferredUser")
+                    b.Property<string>("ReferredUserEmail")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReferrerUserId")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RefferedTrackingId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
@@ -46,24 +49,62 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Referral");
+                    b.ToTable("Referrals");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 2, 14, 47, 22, 610, DateTimeKind.Utc).AddTicks(7942),
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5820),
                             ReferralCode = "XY7G4D",
                             ReferrerUserId = "janedoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("89562468-222a-4661-bee0-5d9b9749cd90"),
                             Status = "Pending"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 2, 2, 14, 47, 22, 610, DateTimeKind.Utc).AddTicks(7946),
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5878),
                             ReferralCode = "AB8H5E",
                             ReferrerUserId = "johndoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("26a3bd92-3917-401e-98c3-fd8f8d9d02b4"),
                             Status = "Pending"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5882),
+                            ReferralCode = "XY7G4D",
+                            ReferrerUserId = "janedoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("f273be35-eb54-4bb5-977c-31aec7506bad"),
+                            Status = "Redeemed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5885),
+                            ReferralCode = "XY7G4D",
+                            ReferrerUserId = "janedoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("995822ad-9064-425d-8a67-4aed6272c09b"),
+                            Status = "Pending"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5888),
+                            ReferralCode = "XY7G4D",
+                            ReferrerUserId = "janedoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("7578daa8-8ad6-42f7-b46c-988a41bc6fd1"),
+                            Status = "Pending"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2025, 2, 2, 16, 26, 19, 693, DateTimeKind.Local).AddTicks(5890),
+                            ReferralCode = "XY7G4D",
+                            ReferrerUserId = "janedoe@nothingspecific.com",
+                            RefferedTrackingId = new Guid("3adfad83-068d-4d9c-acea-881610593d06"),
+                            Status = "Redeemed"
                         });
                 });
 
@@ -120,7 +161,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 1,
-                            ClickedAt = new DateTime(2025, 2, 2, 14, 47, 22, 610, DateTimeKind.Utc).AddTicks(8055),
+                            ClickedAt = new DateTime(2025, 2, 2, 21, 26, 19, 693, DateTimeKind.Utc).AddTicks(6013),
                             DeviceId = "device001",
                             ReferralId = 1,
                             Source = "SMS"
@@ -128,7 +169,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 2,
-                            ClickedAt = new DateTime(2025, 2, 2, 14, 47, 22, 610, DateTimeKind.Utc).AddTicks(8056),
+                            ClickedAt = new DateTime(2025, 2, 2, 21, 26, 19, 693, DateTimeKind.Utc).AddTicks(6014),
                             DeviceId = "device002",
                             ReferralId = 2,
                             Source = "Email"
@@ -137,7 +178,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.ReferralReports", b =>
                 {
-                    b.HasOne("Data.Referral", "Referral")
+                    b.HasOne("Data.Entities.Referrals", "Referral")
                         .WithMany("ReferralReports")
                         .HasForeignKey("ReferralId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -148,7 +189,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.ReferralTracking", b =>
                 {
-                    b.HasOne("Data.Referral", "Referral")
+                    b.HasOne("Data.Entities.Referrals", "Referral")
                         .WithMany("Clicks")
                         .HasForeignKey("ReferralId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -157,7 +198,7 @@ namespace Data.Migrations
                     b.Navigation("Referral");
                 });
 
-            modelBuilder.Entity("Data.Referral", b =>
+            modelBuilder.Entity("Data.Entities.Referrals", b =>
                 {
                     b.Navigation("Clicks");
 
