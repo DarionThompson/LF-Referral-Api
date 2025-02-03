@@ -12,7 +12,7 @@ paths:
     post:
       summary: Generate a referral link
       description: Generates a unique deep link for a user to share referrals.
-      operationId: generate-link
+      operationId: generateReferralLink
       requestBody:
         required: true
         content:

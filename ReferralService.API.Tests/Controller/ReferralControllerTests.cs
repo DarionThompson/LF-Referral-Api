@@ -9,14 +9,14 @@ using Services.Users;
 
 namespace ReferralService.API.Tests.Controller
 {
-    public class ReferralControllerTestscs
+    public class ReferralControllerTests
     {
         private readonly Mock<IDeepLinkService> _mockDeepLinkService;
         private readonly Mock<IReferralRepository> _mockReferralRepository;
         private readonly Mock<IUserService> _mockUserService;
         private readonly ReferralController _sut;
 
-        public ReferralControllerTestscs()
+        public ReferralControllerTests()
         {
             _mockDeepLinkService = new Mock<IDeepLinkService>();
             _mockReferralRepository = new Mock<IReferralRepository>();
@@ -85,7 +85,7 @@ namespace ReferralService.API.Tests.Controller
         public async Task GetUserReferrals_WithNoUserId_ShouldReturnBadReqest()
         {
 
-            var result = await _sut.GetUserReferrals(string.Empty);
+            var result = await _sut.GetUserReferralsbyId(string.Empty);
 
             result.Should().BeOfType<BadRequestObjectResult>()
                 .Which.Value.Should().Be("User Id is required");
