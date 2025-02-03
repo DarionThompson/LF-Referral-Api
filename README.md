@@ -25,7 +25,7 @@ dotnet run --project ReferralService.API
 The API Should be running at: 
 http://localhost:5084/api/Referral/
 
-Full API Documentation is available in **`referral-api.yaml`** (OpenAPI 3.0) in the root of the project
+Full API Documentation is available in **`referral-api.yaml`** (OpenAPI 3.0) in the root of the API project
 
 ---
 
