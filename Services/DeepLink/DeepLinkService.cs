@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,12 @@ namespace Services.DeepLink
 {
     public class DeepLinkService : IDeepLinkService
     {
-        public Task<string> GetDeepLinkUrlAync(string referralCode, string referredSource)
+        public async Task<GeneratedLinkResponse> GetDeepLinkUrlAync(ReferralRequest request)
         {
-            throw new NotImplementedException();
+            return new GeneratedLinkResponse
+            {
+                Link = $"https://urlgeni.us/X_mKB/{request.ReferralCode}/{request.ReferredTrackingId}",
+            };
         }
     }
 }

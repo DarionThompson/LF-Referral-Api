@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.DeepLink;
 using Services.Models;
 using Services.Referral;
+using Services.Users;
 
 namespace ReferralService.API.Controllers
 {
@@ -12,11 +13,13 @@ namespace ReferralService.API.Controllers
     {
         private readonly IReferralRepository _referralRepository;
         private readonly IDeepLinkService _deepLinkService;
+        private readonly IUserService _userService;
 
-        public ReferralController(IReferralRepository referralRepository, IDeepLinkService deepLinkService)
+        public ReferralController(IReferralRepository referralRepository, IDeepLinkService deepLinkService, IUserService userService)
         {
             _referralRepository = referralRepository;
             _deepLinkService = deepLinkService;
+            _userService = userService;
         }
 
         [HttpPost("generate-link")]
@@ -26,23 +29,30 @@ namespace ReferralService.API.Controllers
                 return BadRequest("Referrer UserID is required");
 
             if (string.IsNullOrWhiteSpace(request.ReferralCode))
-                return BadRequest("Referrer code is required");
+                return BadRequest("Referral Code is required");
 
-            if (string.IsNullOrWhiteSpace(request.ReferredSource))
-                return BadRequest("Referrer Source is required");
+            if (string.IsNullOrWhiteSpace(request.ReferredUserEmail))
+                return BadRequest("Referrer User Email is required");
 
-            var deepLinkUrl = await _deepLinkService.GetDeepLinkUrlAync(request.ReferralCode, request.ReferredSource);
+            var isExistingUser = await _userService.CheckIfUserExistsAsync(request.ReferredUserEmail);
 
-            var response = await _referralRepository.CreateReferralAsync(request);
+            if(isExistingUser)
+            {
+                return Conflict("User is already registered and cannot be referred.");
+            }
 
-            return Ok(new ReferralResponse { DeepLink = deepLinkUrl, ReferralCode = response.ReferralCode });
+            var deepLinkResponse = await _deepLinkService.GetDeepLinkUrlAync(request);
+
+            await _referralRepository.CreateReferralAsync(request);
+
+            return CreatedAtAction(nameof(GenerateReferralLink), new ReferralResponse { DeepLink = deepLinkResponse.Link});
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUserReferrals(string userId)
+        [HttpGet("get-referrals")]
+        public async Task<IActionResult> GetUserReferralsbyId(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
-                return BadRequest("UserID is required");
+                return BadRequest("User Id is required");
 
             var result = await _referralRepository.GetReferralsAsync(userId);
 

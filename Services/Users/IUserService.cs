@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Models
+namespace Services.Users
 {
-    public class ReferralResponse
+    public interface IUserService
     {
-        public string DeepLink { get; set; }
+        public Task<bool> CheckIfUserExistsAsync(string RefferedUserEmail);
     }
 }

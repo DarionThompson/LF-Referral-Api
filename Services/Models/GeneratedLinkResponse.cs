@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Services.Models
 {
-    public class ReferralResponse
+    public class GeneratedLinkResponse
     {
-        public string DeepLink { get; set; }
+        public string Link { get; set; }
     }
 }

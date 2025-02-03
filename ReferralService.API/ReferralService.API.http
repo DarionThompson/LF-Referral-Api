@@ -1,6 +1,6 @@
 @ReferralService.API_HostAddress = http://localhost:5084
 
-GET {{ReferralService.API_HostAddress}}/weatherforecast/
+GET {{ReferralService.API_HostAddress}}/api/referral/
 Accept: application/json
 
 ###

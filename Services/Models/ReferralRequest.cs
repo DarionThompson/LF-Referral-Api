@@ -12,6 +12,8 @@ namespace Services.Models
 
         public string ReferralCode { get; set; }
 
-        public string ReferredSource { get; set; }
+        public string ReferredUserEmail { get; set; }
+
+        public Guid ReferredTrackingId { get; set; } = Guid.NewGuid();
     }
 }

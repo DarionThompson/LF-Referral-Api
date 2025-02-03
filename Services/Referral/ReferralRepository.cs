@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using Data;
+using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Referral
 {
@@ -22,14 +18,18 @@ namespace Services.Referral
             _mapper = mapper;
         }
 
-        public Task<ReferralDto> CreateReferralAsync(ReferralRequest request)
+        public async Task CreateReferralAsync(ReferralRequest request)
         {
-            throw new NotImplementedException();
-        }
+            var referral = new Referrals
+            {
+                ReferrerUserId = request.ReferrerUserId,
+                ReferralCode = request.ReferralCode,
+                ReferredUserEmail = request.ReferredUserEmail,
+                RefferedTrackingId = request.ReferredTrackingId
+            };
+            await _dbContext.Referrals.AddAsync(referral);
+            await _dbContext.SaveChangesAsync();
 
-        public Task<ReferralDto> GetReferralByCodeAndTrackingIdAsync(string referralCode, string referredTrackingId)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<ReferralDto>> GetReferralsAsync(string referralUserId)

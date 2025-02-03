@@ -1,0 +1,174 @@
+openapi: 3.0.1
+info:
+  title: Referral API
+  description: API for generating referral links, retrieving referrals, and validating referrals.
+  version: 1.1.0
+servers:
+  - url: https://localhost:7293;http://localhost:5084"
+    description: Local Development
+
+paths:
+  /generate-link:
+    post:
+      summary: Generate a referral link
+      description: Generates a unique deep link for a user to share referrals.
+      operationId: generate-link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [referrerUserId, referralCode, referredUserEmail, referredTrackingId]
+              properties:
+                referrerUserId:
+                  type: string
+                  example: "janedoe@nothingspecific.com"
+                referralCode:
+                  type: string
+                  example: "XY7G4D"
+                referredUserEmail:
+                  type: string
+                  format: email
+                  example: "newuser@email.com"
+                referredTrackingId:
+                  type: uuid
+                  example: "3adfad83-068d-4d9c-acea-881610593d06"
+      responses:
+        "201":
+          description: Referral link generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deepLink:
+                    type: string
+                    example: "https://app.example.com/referral?TrackingId=3adfad83-068d-4d9c-acea-881610593d06"
+        "400":
+          description: Bad request, missing required fields.
+        "409":
+          description: Conflict. Referred user already exists and cannot be referred.
+        "500":
+          description: Internal server error.
+
+  /get-referrals:
+    get:
+      summary: Retrieve user referrals by User Id
+      description: Returns a list of referrals associated with a given user ID.
+      operationId: getUserReferralsById
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "janedoe@nothingspecific.com"
+      responses:
+        "200":
+          description: List of user referrals retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    referredUserId:
+                      type: string
+                      format: email
+                      example: "janedoe@nothingspecific.com"
+                    referralCode:
+                      type: string
+                      example: "XY7G4D"
+                    referredUserEmail:
+                      type: string
+                      format: email
+                      example: "newuser@email.com"
+                    status:
+                      type: string
+                      enum: [Pending, Redeemed]
+                      example: "Pending"
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: "2024-02-02"
+        "400":
+          description: Bad request, missing user ID.
+        "500":
+          description: Internal server error.
+
+  /get-referral-details:
+    get:
+      summary: Get Referral Details
+      description: Decodes a deep link sent by the app after installation to retrieve referral details.
+      operationId: getReferralDetails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [deepLinkUrl]
+              properties:
+                deepLinkUrl:
+                  type: string
+                  example: "https://cartoncaps.link/referral_code=XY7G4D"
+      responses:
+        "200":
+          description: Referral details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  referralCode:
+                    type: string
+                    example: "XY7G4D"
+                  redirectView:
+                    type: string
+                    example: "welcome view"
+        "400": 
+          description: Bad request, malformed or missing required parameters in the deep link.
+        "404":
+          description: Referral not found.
+        "500":
+          description: Internal server error.
+
+  /webhook/referral-redeemed:
+    patch:
+      summary: Webhook for referral redemption
+      description: External systems can notify the Referral API when a referral is redeemed.
+      operationId: referralRedeemed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: 
+              properties:
+                referralCode:
+                    type: string
+                    example: "XY7G4D"
+                referredUserEmail:
+                  type: string
+                  format: email
+                  example: "newuser@email.com"
+      responses:
+        "200":
+          description: Referral redemption acknowledged.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Referral redeemed successfully."
+        "400":
+          description: Bad request, missing required fields.
+        "404":
+          description: Referral not found.
+        "409":
+          description: Referral has already been redeemed.

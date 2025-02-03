@@ -9,8 +9,8 @@ namespace Services.Referral
 {
     public interface IReferralRepository
     {
-        Task<ReferralDto> CreateReferralAsync(ReferralRequest request);
+        Task CreateReferralAsync(ReferralRequest request);
+
         Task<List<ReferralDto>> GetReferralsAsync(string referralUserId);
-        Task<ReferralDto> GetReferralByCodeAndTrackingIdAsync(string referralCode, string referredTrackingId);
     }
 }

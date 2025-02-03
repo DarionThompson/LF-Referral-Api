@@ -30,9 +30,5 @@ namespace Data.Entities
         public string Status { get; set; } = "Pending";
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public List<ReferralTracking> Clicks { get; set; } = new();
-
-        public List<ReferralReports> ReferralReports { get; set; } = new();
     }
 }

@@ -1,9 +1,11 @@
 using AutoMapper;
 using Data;
 using Microsoft.EntityFrameworkCore;
+using ReferralService.API.Middleware;
 using Services.DeepLink;
 using Services.Mapping;
 using Services.Referral;
+using Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,7 @@ builder.Services.AddDbContext<ReferralDbContext>(options =>
 
 builder.Services.AddScoped<IReferralRepository, ReferralRepository>();
 builder.Services.AddScoped<IDeepLinkService, DeepLinkService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -39,11 +42,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//Apply DB migration on startup
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ReferralDbContext>();
     dbContext.Database.Migrate();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

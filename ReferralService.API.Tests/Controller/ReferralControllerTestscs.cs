@@ -5,6 +5,7 @@ using ReferralService.API.Controllers;
 using Services.DeepLink;
 using Services.Models;
 using Services.Referral;
+using Services.Users;
 
 namespace ReferralService.API.Tests.Controller
 {
@@ -12,13 +13,17 @@ namespace ReferralService.API.Tests.Controller
     {
         private readonly Mock<IDeepLinkService> _mockDeepLinkService;
         private readonly Mock<IReferralRepository> _mockReferralRepository;
+        private readonly Mock<IUserService> _mockUserService;
         private readonly ReferralController _sut;
 
         public ReferralControllerTestscs()
         {
             _mockDeepLinkService = new Mock<IDeepLinkService>();
             _mockReferralRepository = new Mock<IReferralRepository>();
-            _sut = new ReferralController(_mockReferralRepository.Object, _mockDeepLinkService.Object);
+            _mockUserService = new Mock<IUserService>();
+
+            _mockUserService.Setup(x => x.CheckIfUserExistsAsync(It.IsAny<string>())).ReturnsAsync(false);
+            _sut = new ReferralController(_mockReferralRepository.Object, _mockDeepLinkService.Object, _mockUserService.Object);
         }
 
         [Fact]
@@ -40,7 +45,7 @@ namespace ReferralService.API.Tests.Controller
             var result = await _sut.GenerateReferralLink(testRequest);
 
             result.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("Referrer code is required");
+                .Which.Value.Should().Be("Referral Code is required");
         }
 
         [Fact]
@@ -55,7 +60,35 @@ namespace ReferralService.API.Tests.Controller
             var result = await _sut.GenerateReferralLink(testRequest);
 
             result.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("Referrer User Emails is required");
+                .Which.Value.Should().Be("Referrer User Email is required");
+        }
+
+        [Fact]
+        public async Task GenerateReferralLink_WithExistingUser_ShouldReturnConflict()
+        {
+            var testRequest = new ReferralRequest
+            {
+                ReferralCode = "XY7G4D",
+                ReferrerUserId = "jonedoe@nothingspecific.com",
+                ReferredUserEmail = "janedoe@nothingspecific.com"
+            };
+
+            _mockUserService.Setup(x => x.CheckIfUserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
+
+            var result = await _sut.GenerateReferralLink(testRequest);
+
+            result.Should().BeOfType<ConflictObjectResult>()
+                .Which.Value.Should().Be("User is already registered and cannot be referred.");
+        }
+
+        [Fact]
+        public async Task GetUserReferrals_WithNoUserId_ShouldReturnBadReqest()
+        {
+
+            var result = await _sut.GetUserReferrals(string.Empty);
+
+            result.Should().BeOfType<BadRequestObjectResult>()
+                .Which.Value.Should().Be("User Id is required");
         }
     }
 }
